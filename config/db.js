@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const URI =
-  'mongodb+srv://orchide:mamaor@orchidscontacts-uvppx.mongodb.net/devcamp?retryWrites=true&w=majority';
+  'mongodb+srv://orchide:mamaor@orchidscontacts-uvppx.mongodb.net/DevCamp?retryWrites=true&w=majority';
 
 // environment variable path
 // require('dotenv').config({ path: './config.env' });

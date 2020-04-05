@@ -12,6 +12,9 @@ dotenv.config({ path: './config/config.env' });
 
 const app = express();
 
+// enable our app to use JSON body data
+app.use(express.json());
+
 // Mount router
 const bootcamps = require('./Routes/bootcamps');
 
