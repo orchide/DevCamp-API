@@ -1,7 +1,8 @@
-const express = require('express');
 const dotenv = require('dotenv');
+const express = require('express');
 const morgan = require('morgan');
 const colors = require('colors');
+const errorHandler = require('./middleware/error');
 const connectDB = require('./config/db');
 
 // connect to the Database
@@ -19,6 +20,8 @@ app.use(express.json());
 const bootcamps = require('./Routes/bootcamps');
 
 app.use('/api/v1/bootcamps', bootcamps);
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
