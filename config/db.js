@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const URI =
-  'mongodb+srv://orchide:mamaor@orchidscontacts-uvppx.mongodb.net/devcamp?retryWrites=true&w=majority';
+  'mongodb+srv://orchide:mamaor@orchidscontacts-uvppx.mongodb.net/devbootcamp?retryWrites=true&w=majority';
 
 const connectDB = async () => {
   const conn = await mongoose.connect(URI, {
