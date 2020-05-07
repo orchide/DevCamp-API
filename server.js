@@ -18,8 +18,10 @@ app.use(express.json());
 
 // Mount router
 const bootcamps = require('./Routes/bootcamps');
+const courses = require('./Routes/courses');
 
 app.use('/api/v1/bootcamps', bootcamps);
+app.use('/api/v1/courses', courses);
 
 app.use(errorHandler);
 
