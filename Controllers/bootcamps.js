@@ -30,7 +30,7 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
   );
 
   //finding resource
-  query = Bootcamp.find(JSON.parse(queryString));
+  query = Bootcamp.find(JSON.parse(queryString)).populate('courses');
 
   // SELECT FIELDS
   if (req.query.select) {
@@ -137,9 +137,17 @@ exports.updateBootcamp = asyncHandler(async (req, res, next) => {
 // @ROUTE       DELETE /api/v1/bootcamps/:id
 // @access      Private
 exports.deleteBootcamp = asyncHandler(async (req, res, next) => {
-  await Bootcamp.findByIdAndDelete(req.params.id);
+  const bootcamp = await Bootcamp.findById(req.params.id);
 
-  res.status(200).json({ success: true });
+  if (!bootcamp) {
+    return next(
+      new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
+    );
+  }
+
+  bootcamp.remove();
+
+  res.status(200).json({ success: true, data: {} });
 });
 
 // @Desc        get bootcamps in a certain zipcode and radius
