@@ -1,4 +1,6 @@
 const dotenv = require('dotenv');
+const path = require('path');
+const fileupload = require('express-fileupload');
 const express = require('express');
 const morgan = require('morgan');
 const colors = require('colors');
@@ -15,6 +17,12 @@ const app = express();
 
 // enable our app to use JSON body data
 app.use(express.json());
+
+// File uploading
+app.use(fileupload());
+
+// Set Static folder
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Mount router
 const bootcamps = require('./Routes/bootcamps');
