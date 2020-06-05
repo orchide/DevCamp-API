@@ -24,12 +24,15 @@ app.use(fileupload());
 // Set Static folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Mount router
+// add router file
 const bootcamps = require('./Routes/bootcamps');
 const courses = require('./Routes/courses');
+const auth = require('./Routes/auth');
 
+// Mout Routers
 app.use('/api/v1/bootcamps', bootcamps);
 app.use('/api/v1/courses', courses);
+app.use('/api/v1/auth', auth);
 
 app.use(errorHandler);
 
