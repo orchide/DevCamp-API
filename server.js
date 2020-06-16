@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const colors = require('colors');
 const errorHandler = require('./middleware/error');
 const connectDB = require('./config/db');
+const cookieParser = require('cookie-parser');
 
 // connect to the Database
 connectDB();
@@ -15,8 +16,11 @@ dotenv.config({ path: './config/config.env' });
 
 const app = express();
 
-// enable our app to use JSON body data
+// Body Parse
 app.use(express.json());
+
+// Cookie parser
+app.use(cookieParser());
 
 // File uploading
 app.use(fileupload());
