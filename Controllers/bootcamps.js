@@ -31,9 +31,18 @@ exports.getBootcamp = asyncHandler(async (req, res, next) => {
 // @access      Private
 
 exports.createBootCamp = asyncHandler(async (req, res, next) => {
-  const bootcamp = await Bootcamp.create(req.body);
+  // Add user to req.body
+  req.body.user = req.user.id;
 
-  // console.log(req.body);
+  // Check for published bootcamp
+  const publishedBootcamp = await Bootcamp.findOne({ user: req.user.id });
+
+  // Check if the user isn't admin
+  if (publishedBootcamp && req.user.role !== 'admin') {
+    return next(new ErrorResponse('Access Denied', 400));
+  }
+
+  const bootcamp = await Bootcamp.create(req.body);
 
   res.status(201).json({
     success: 'True',
@@ -45,14 +54,28 @@ exports.createBootCamp = asyncHandler(async (req, res, next) => {
 // @ROUTE       PUT /api/v1/bootcamps/:id
 // @access      Private
 exports.updateBootcamp = asyncHandler(async (req, res, next) => {
-  const bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id, req.body, {
+  let bootcamp = await Bootcamp.findById(req.params.id);
+
+  if (!bootcamp) {
+    return next(
+      new ErrorResponse('No bootcamp found with provided resources', 404)
+    );
+  }
+
+  // Make sure user is the owner
+  if (bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    return next(
+      new ErrorResponse(
+        `user ${req.user.id} doesn't own this resource please contact Your Admin`,
+        401
+      )
+    );
+  }
+
+  bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
   });
-
-  if (!bootcamp) {
-    return res.status(400).json({ success: false });
-  }
 
   res.status(200).json({ success: true, data: bootcamp });
 });
@@ -66,6 +89,16 @@ exports.deleteBootcamp = asyncHandler(async (req, res, next) => {
   if (!bootcamp) {
     return next(
       new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
+    );
+  }
+
+  // Make sure user is the owner
+  if (bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    return next(
+      new ErrorResponse(
+        `user ${req.user.id} doesn't own this resource please contact Your Admin`,
+        401
+      )
     );
   }
 
@@ -109,6 +142,16 @@ exports.bootcampPhotoUpload = asyncHandler(async (req, res, next) => {
   if (!bootcamp) {
     return next(
       new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
+    );
+  }
+
+  // Make sure user is the owner
+  if (bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    return next(
+      new ErrorResponse(
+        `user ${req.user.id} doesn't own this resource please contact Your Admin`,
+        401
+      )
     );
   }
 
