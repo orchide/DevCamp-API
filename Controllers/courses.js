@@ -50,11 +50,22 @@ exports.getCourse = asyncHandler(async (req, res, next) => {
 // @access      Private
 exports.addCourse = asyncHandler(async (req, res, next) => {
   req.body.bootcamp = req.params.bootCampId;
+  req.body.user = req.user.id;
 
   const bootcamp = await Bootcamp.findById(req.params.bootCampId);
 
   if (!bootcamp) {
     return next(new ErrorResponse('No bootcamp with the id provided', 404));
+  }
+
+  // Check if the person posting the post is the owner of the bootcamp
+  if (bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    return next(
+      new ErrorResponse(
+        `user ${req.user.id} doesn't own this resource and can't make changes to it please contact Your Admin`,
+        401
+      )
+    );
   }
 
   const course = await Course.create(req.body);
@@ -70,6 +81,15 @@ exports.updateCourse = asyncHandler(async (req, res, next) => {
 
   if (!course) {
     return next(new ErrorResponse('No Course with the id provided', 404));
+  }
+
+  if (course.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    return next(
+      new ErrorResponse(
+        `user ${req.user.id} doesn't own this resource and can't make changes to it please contact Your Admin`,
+        401
+      )
+    );
   }
 
   course = await Course.findByIdAndUpdate(req.params.id, req.body, {
@@ -88,6 +108,16 @@ exports.deleteCourse = asyncHandler(async (req, res, next) => {
 
   if (!course) {
     return next(new ErrorResponse('No Course with the id provided', 404));
+  }
+
+  // Check if the person posting the post is the owner of the bootcamp
+  if (course.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    return next(
+      new ErrorResponse(
+        `user ${req.user.id} doesn't own this resource and can't make changes to it please contact Your Admin`,
+        401
+      )
+    );
   }
 
   course.remove();

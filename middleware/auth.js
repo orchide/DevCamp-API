@@ -3,6 +3,7 @@ const asyncHandler = require('./async');
 const errorResponse = require('../Utilities/ErrorResponse');
 const User = require('../models/User');
 
+// Protect routes from access of non-logged in users
 exports.protect = asyncHandler(async (req, res, next) => {
   let token;
 
