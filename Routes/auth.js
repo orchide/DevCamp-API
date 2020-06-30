@@ -6,6 +6,8 @@ const {
   getMe,
   forgotpassword,
   resetPassword,
+  updateDetails,
+  updatePassword,
 } = require('../Controllers/user');
 
 // Route protection middleware
@@ -22,5 +24,7 @@ router.route('/me').get(protect, getMe);
 
 router.post('/forgotpassword', forgotpassword);
 router.put('/resetpassword/:resettoken', resetPassword);
+router.put('/updatedetails', protect, updateDetails);
+router.put('/updatepassword', protect, updatePassword);
 
 module.exports = router;
