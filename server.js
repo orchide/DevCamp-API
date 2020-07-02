@@ -7,6 +7,12 @@ const colors = require('colors');
 const errorHandler = require('./middleware/error');
 const connectDB = require('./config/db');
 const cookieParser = require('cookie-parser');
+const mongoSanitizer = require('express-mongo-sanitize');
+const helmet = require('helmet');
+const xss = require('xss-clean');
+const ratelimit = require('express-rate-limit');
+const hpp = require('hpp');
+const cors = require('cors');
 
 // connect to the Database
 connectDB();
@@ -15,6 +21,29 @@ connectDB();
 dotenv.config({ path: './config/config.env' });
 
 const app = express();
+
+// Sanitize queries
+app.use(mongoSanitizer());
+
+// Set security headers
+app.use(helmet());
+
+// Prevent Cross site scripting
+app.use(xss());
+
+// number of request limiting
+const limiter = ratelimit({
+  windowsMs: 10 * 60 * 1000, // 10 mins
+  max: 100,
+});
+
+app.use(limiter);
+
+// prevent http param pollution
+app.use(hpp());
+
+// Make our api public
+app.use(cors());
 
 // Body Parse
 app.use(express.json());
