@@ -33,12 +33,14 @@ const bootcamps = require('./Routes/bootcamps');
 const courses = require('./Routes/courses');
 const auth = require('./Routes/auth');
 const admin = require('./Routes/admin');
+const reviews = require('./Routes/reviews');
 
 // Mout Routers
 app.use('/api/v1/bootcamps', bootcamps);
 app.use('/api/v1/courses', courses);
 app.use('/api/v1/auth', auth);
 app.use('/api/v1/auth/users', admin);
+app.use('/api/v1/reviews', reviews);
 
 app.use(errorHandler);
 
